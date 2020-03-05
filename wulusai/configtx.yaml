@@ -1,0 +1,168 @@
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+---
+################################################################################
+#
+#   Section: Organizations
+#
+#   - This section defines the different organizational identities which will
+#   be referenced later in the configuration.
+#
+################################################################################
+Organizations: #不能改
+    - &OrdererOrg # '&' 这个符号 类似于go的取地址 后面的 '*' 表示引用这下面的内容
+        Name: OrdererOrg #排序节点组织名
+        ID: OrdererMSP #排序节点组织ID
+        MSPDir: crypto-config/ordererOrganizations/wulusai.net/msp #组织身份
+        Policies: #策略 必须要配置
+            Readers:
+                Type: Signature
+                Rule: "OR('OrdererMSP.member')"
+            Writers:
+                Type: Signature
+                Rule: "OR('OrdererMSP.member')"
+            Admins:
+                Type: Signature
+                Rule: "OR('OrdererMSP.admin')"
+
+    - &Org1 #第一个组织
+        Name: Org1MSP #第一个组织名
+        ID: Org1MSP #第一个组织ID
+        MSPDir: crypto-config/peerOrganizations/org1.wulusai.net/msp #组织1的身份 路径用刚才生成的文件路径替换
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('Org1MSP.admin', 'Org1MSP.peer', 'Org1MSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('Org1MSP.admin', 'Org1MSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('Org1MSP.admin')"
+        # leave this flag set to true.
+        AnchorPeers: # 锚节点      翻译以下英文 只在应用程序部分上下文中被编码
+            - Host: peer0.org1.wulusai.net #指定一个peer节点的域名,要是前面生成证书时配置有的
+              Port: 7051
+
+    - &Org2
+        Name: Org2MSP
+        ID: Org2MSP
+        MSPDir: crypto-config/peerOrganizations/org2.wulusai.net/msp
+        Policies:
+            Readers:
+                Type: Signature
+                Rule: "OR('Org2MSP.admin', 'Org2MSP.peer', 'Org2MSP.client')"
+            Writers:
+                Type: Signature
+                Rule: "OR('Org2MSP.admin', 'Org2MSP.client')"
+            Admins:
+                Type: Signature
+                Rule: "OR('Org2MSP.admin')"
+        AnchorPeers:
+            - Host: peer0.org2.wulusai.net
+              Port: 9051
+
+Capabilities: #能力 在fabric1.1之前没有 全部为true就可以
+    Channel: &ChannelCapabilities
+        V1_4_3: true
+        V1_3: false
+        V1_1: false
+
+    Orderer: &OrdererCapabilities
+        V1_4_2: true
+        V1_1: false
+
+    Application: &ApplicationCapabilities
+        V1_4_2: true
+        V1_3: false
+        V1_2: false
+        V1_1: false
+
+
+Application: &ApplicationDefaults #使用默认配置
+    Organizations:
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+    Capabilities:
+        <<: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults  #排序节点打包的定义
+    OrdererType: solo #排序算法 也称共识机制
+    Addresses: #order节点的地址 如果用kafka就需要3个以上了
+        - orderer.wulusai.net:7050 #端口不要改
+    BatchTimeout: 2s #生成区块的间隔 和下面的互补 '|' 的关系
+    BatchSize: #            batch:批处理
+        MaxMessageCount: 100 #交易的最大条数,大于等于就会产生区块 100左右
+        AbsoluteMaxBytes: 32 MB #数据量达到99M也产生区块 实际 32/64M
+        PreferredMaxBytes: 512 KB
+    Organizations:
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+        BlockValidation:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+
+
+Channel: &ChannelDefaults
+    Policies:
+        Readers:
+            Type: ImplicitMeta
+            Rule: "ANY Readers"
+        Writers:
+            Type: ImplicitMeta
+            Rule: "ANY Writers"
+        Admins:
+            Type: ImplicitMeta
+            Rule: "MAJORITY Admins"
+
+    Capabilities:
+        <<: *ChannelCapabilities
+
+Profiles: #不能改 对前面配置的总结
+    #生产环境下 TwoOrgsOrdererGenesis  OrdererDefaults OrdererOrg SampleConsortium TwoOrgsChannel ApplicationDefaults 可以自定义
+    TwoOrgsOrdererGenesis: #可以改
+        <<: *ChannelDefaults
+        Orderer:
+            <<: *OrdererDefaults
+            Organizations:
+                - *OrdererOrg #生产环境下最好自定义
+            Capabilities:
+                <<: *OrdererCapabilities
+        Consortiums: #联盟
+            SampleConsortium: #这个名字可以改 跟下面的对应
+                Organizations: #1
+                    - *Org1
+                    - *Org2
+    TwoOrgsChannel: #通道名字可以改
+        Consortium: SampleConsortium
+        <<: *ChannelDefaults
+        Application:
+            <<: *ApplicationDefaults
+            Organizations: #1 此处组织要与上面的一一对应
+                - *Org1
+                - *Org2
+            Capabilities: #能力
+                <<: *ApplicationCapabilities
+
+
+
+

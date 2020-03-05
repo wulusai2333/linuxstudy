@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<!-- import CSS -->
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<title>呜路塞</title>
+		<link rel="shortcut icon" href="https://image.wulusai.net/favicon.ico" />
+		<link rel="bookmark" href="https://image.wulusai.net/favicon.ico" type="image/x-icon"　/>
+		<link rel="icon" href="/favicon.gif" type="image/gif" />
+	</head>
+	<style>
+		.bg {
+
+			background: url(https://image.wulusai.net/325b9376cd64b29f7bb95a3b458c1996cf05981a.jpg);
+			background-size: cover;
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			-webkit-filter: blur(10px);
+			-moz-filter: blur(10px);
+			-ms-filter: blur(10px);
+			filter: blur(10px);
+			filter: progid:DXImageTransform.Microsoft.Blur(PixelRadius=10, MakeShadow=false);
+			z-index: -1;
+		}
+		.el-col{
+			padding-top:20px;
+			padding-left:20px ;
+		}
+		.el-footer {
+		    background-color: #FFFFFF;
+		    color: #333;
+		    text-align: center;
+		    line-height: 60px;
+		  }
+	</style>
+
+	<body>
+		<div class="bg">
+
+		</div>
+		<div id="app">
+			<el-container style="height: 10%;">
+				<el-header>
+					<el-menu  class="el-menu-demo" mode="horizontal" >
+						<el-menu-item index="1" @click="open4">
+							<div>
+								<el-avatar src="https://image.wulusai.net/6E93F43FABECA4505133AF05956DBFA9.jpg"></el-avatar>
+							</div>
+						</el-menu-item>
+						<el-submenu index="2">
+							<template slot="title">心情咖啡屋</template>
+							<el-menu-item index="2-1">linux</el-menu-item>
+							<el-menu-item index="2-2">winodws</el-menu-item>
+							<el-submenu index="2-3">
+								<template slot="title">其他</template>
+								<el-menu-item index="2-3-1">idea</el-menu-item>
+								<el-menu-item index="2-3-2">hbuider</el-menu-item>
+								<el-menu-item index="2-3-3">finalshell</el-menu-item>
+							</el-submenu>
+						</el-submenu>
+						<el-menu-item index="3" disabled>还不知道放点啥呢!就先这样吧</el-menu-item>
+						<el-menu-item index="4">
+							<a href="https://cyc2018.github.io/CS-Notes/#/" target="_blank">给点有用的东西</a>
+						</el-menu-item>
+					</el-menu>
+				</el-header>
+
+				<el-container style="height: 90%;">
+					<el-aside style="width: 250px;">
+						<!--左侧导航-->
+						<el-row class="tac"  height="1000px">
+							<el-col :span="24" >
+								
+			
+								<el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose">
+									<el-submenu index="1">
+										<template slot="title">
+											<i class="el-icon-coffee-cup"></i>
+											<span>Java</span>
+										</template>
+										<el-menu-item-group>
+											<template slot="title">spring</template>
+											<el-menu-item index="1-1">springboot</el-menu-item>
+											<el-menu-item index="1-2">springcloud</el-menu-item>
+										</el-menu-item-group>
+										<el-menu-item-group title="2333">
+											<el-menu-item index="1-3">nodejs</el-menu-item>
+										</el-menu-item-group>
+										<el-submenu index="1-4">
+											<template slot="title">...</template>
+											<el-menu-item index="1-4-1">其他</el-menu-item>
+										</el-submenu>
+									</el-submenu>
+									<el-menu-item index="2">
+										<i class="el-icon-female"></i>
+										<span slot="title">tomcat</span>
+									</el-menu-item>
+									<el-menu-item index="3" disabled>
+										<i class="el-icon-monitor"></i>
+										<span slot="title">redis</span>
+									</el-menu-item>
+									<el-menu-item index="4">
+										<i class="el-icon-coin"></i>
+										<span slot="title">mysql</span>
+									</el-menu-item>
+									<el-menu-item index="5" @click="open1">
+										<i class="el-icon-male" ></i>
+										<span slot="title">我这里面</span>
+									</el-menu-item>
+									<el-menu-item index="6" @click="open2">
+										<i class="el-icon-s-promotion" ></i>
+										<span slot="title">真的真的</span>
+									</el-menu-item>
+									<el-menu-item index="7" @click="open3">
+										<i class="el-icon-chat-line-square" ></i>
+										<span slot="title">一无所有</span>
+									</el-menu-item>
+								</el-menu>
+							</el-col>
+						</el-row>
+					</el-aside>
+					<el-container>
+						<el-main>
+							<!--主体-->
+							<el-calendar v-model="value">
+							</el-calendar>
+							<el-row>
+							  <el-col :span="4"  style="padding: 10px 0;"><div class="grid-content bg-purple">自定义初始值</div></el-col>
+							  <el-col :span="20" style="padding: 10px 0;"><div class="grid-content bg-purple-light"><el-slider v-model="value2"   :max="10"  :min="0" :step="1" show-input show-stops></el-slider></div></el-col>
+							</el-row>
+							<div class="block">
+							    
+							</div>
+														
+							<!--<template>
+								<el-pagination background layout="prev, pager, next" :total="100">
+								</el-pagination>
+								<el-backtop target=".page-component__scroll .el-scrollbar__wrap"></el-backtop>
+							</template>-->
+						</el-main>
+						<el-footer>
+							<div><el-link type="primary" href="https://image.wulusai.net/beian.html">京ICP备19035062号-1</el-link></div>
+							
+						</el-footer>
+					</el-container>
+					</el-container>
+			</el-container>
+		</div>
+
+	</body>
+	<!-- import Vue before Element -->
+	<script src="https://unpkg.com/vue/dist/vue.js"></script>
+	<!-- import JavaScript -->
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: function() {
+				return {
+					visible: false,
+					value: new Date(),
+					activeNames: ['1'],
+					value2:10
+				}
+			},
+			methods: {
+				open1() {
+					this.$message('别点啦!没有用的...');
+				},
+				open2() {
+					this.$message({
+						message: '我不会骗你的,真的...',
+						type: 'success'
+					});
+				},
+
+				open3() {
+					this.$message({
+						message: '弱小,可怜,又无助的服务器酱~',
+						type: 'warning'
+					});
+				},
+
+				open4() {
+					this.$message.error('禁止哦~不要看这里!');
+				},
+
+				handleOpen(key, keyPath) {
+					console.log(key, keyPath);
+				},
+				handleClose(key, keyPath) {
+					console.log(key, keyPath);
+				},
+				
+
+			}
+		})
+	</script>
+			
+</html>

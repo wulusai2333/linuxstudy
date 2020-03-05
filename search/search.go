@@ -24,7 +24,7 @@ var (
 	wg           sync.WaitGroup
 )
 
-func main() {
+func lain() {
 	//从外部加载路径
 	var path string
 	flag.StringVar(&path, "path", "", "查找文件的路径")
