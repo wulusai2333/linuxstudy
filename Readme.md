@@ -542,148 +542,332 @@ mdir ~/wulusai
 mdir ~/wulusai
 #主机3:192.168.100.30
 mdir ~/wulusai
+#疑问?这是在内网多机部署,如果多组织和多节点跨公网和内网该怎么办?
 ```
 
-nodejs日志
+#####orderer节点主机的配置
+
+```yaml
+#需要注意的是networks的配置
+version: '2'
+
+services:
+  orderer.wulusai.net: #为了方便看 服务名跟域名相同
+    image: hyperledger/fabric-orderer:latest
+    container_name: ca.wulusai.net
+    environment:
+      - FABRIC_LOGGING_SPEC=INFO
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0 #orderer节点的监听地址
+    volumes:
+        - ../crypto-config/...:/var/hyperledger/orderer/msp
+        - ../crypto-config/.../tls/:/var/hyperledger/orderer/tls
+        - orderer.wulusai.net:/var/hyperledger/production/orderer
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    ports:
+      - 7050:7050
+    networks:
+      default:
+      	aliases:
+      		- wulusai #此名字是当前配置文件所在的目录的名字
+```
+
+##### peer节点主机的配置
+
+```yaml
+#需要注意的是节点的networks和extra_hosts的配置
+version: '2'
+
+services:
+
+    peer0.org1.wulusai.net:
+      container_name: peer0.org1.wulusai.net
+      image: hyperledger/fabric-peer:latest
+      environment:
+        - CORE_PEER_LOCALMSPID=Org1MSP
+        - CORE_PEER_ID=peer0.org1.wulusai.net
+        - CORE_PEER_ADDRESS=peer0.org1.wulusai.net:7051
+        - ...
+      volumes:
+        - /var/run/:/host/var/run/
+        - ...
+      working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+      command: peer node start
+      networks:
+        default:
+          aliases:
+            - testwork
+      ports:
+        - 7051:7051
+      extra_hosts:  # 声明域名和IP的对应关系 把域名解析为对应IP
+        - "orderer.wulusai.net:192.168.100.10"
+        #- "peer0.org1.wulusai.net:192.168.100.20"
+        
+#需要注意的是cli的networks和extra_hosts的配置        
+    cli:
+      container_name: cli
+      image: hyperledger/fabric-tools:latest
+      tty: true
+      stdin_open: true
+      environment:
+        - CORE_PEER_ID=cli
+        - CORE_PEER_ADDRESS=peer0.org1.wulusai.net:7051
+        - CORE_PEER_LOCALMSPID=Org1MSP
+        - CORE_PEER_TLS_ENABLED=true
+        - ...
+      working_dir: /opt/gopath/src/github.com/hyperledger/fabric/peer
+      command: /bin/bash
+      volumes:
+          - /var/run/:/host/var/run/
+         
+      depends_on:   # 启动顺序 有用吗?
+        - peer0.org1.wulusai.net     
+      networks:
+          default:
+            aliases:
+              - wulusai #这里需要注意 order ,peer 都要在同名目录下 这个也要相同,否则找不到
+      extra_hosts: #同网络下其他主机地址,这是个 1 orderer 2 peer 的网络 
+        - "orderer.wulusai.net:192.168.100.10"
+        - "peer0.org1.wulusai.net:192.168.100.20"
+        #- "peer0.org2.wulusai.net:192.168.100.30"
+```
+
+部署节点
 
 ```shell
-[root@iz2ze3os69edbihmn9uji4z nodejs]# npm init
-This utility will walk you through creating a package.json file.
-It only covers the most common items, and tries to guess sensible defaults.
+#准备好事先生成的channel-artifacts crypto-config的文件
+#切换到对应主机上 如 pee0.org1的主机 192.168.100.20
+#进入主机文件夹 ~/wulusai
+#拷问文件 channel-artifacts crypto-config 到目录中
+#编写docker-compose.yaml
+理解起来很容易 拷贝的文件是工具生成的,里面包含了docker容器启动需要的文件
+#容器的启动,cli的操作与之前几乎一样,无非就是容器配置文件被拆分了
+容器启动后可执行的操作
+#orderer容器: 假设证书文件
+	先启动,不做任何操作
+#peer0.org1节点: 
+	docker-compose up -d 启动后 
+	cli:
+		执行create channel 
+    	peer join
+    	peer install操作
+    	docker cp cli:/..../peer/channel.block #拷贝通道文件到宿主机中 发给其他主机
+    	#还有一种操作方法,将文件放到容器的挂载目录中
+#peer0.org2节点:
+	
+```
 
-See `npm help json` for definitive documentation on these fields
-and exactly what they do.
+#### fabric网络搭建过程
 
-Use `npm install <pkg>` afterwards to install a package and
-save it as a dependency in the package.json file.
-
-Press ^C at any time to quit.
-package name: (nodejs) 
-version: (1.0.0) 
-description: 
-entry point: (index.js) 
-test command: 
-git repository: 
-keywords: 
-author: 
-license: (ISC) 
-About to write to /root/github.com/wulusai2333/linuxstudy/wulusai/nodejs/package.json:
-
-{
-  "name": "nodejs",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
-}
+```shell
+#1.编写组织信息的配置文件,文件中声明多少个组织,每个组织多少个节点多少用户
+crypto-config.yaml
+#2.生成创世块文件和通道文件,文件中声明配置组织信息,共识机制,区块生成策略,组织关系的概述
+configtx.yaml
+```
 
 
-Is this OK? (yes) 
-[root@iz2ze3os69edbihmn9uji4z nodejs]# npm install -g node-gyp
-npm WARN deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
-/root/node-v12.16.1-linux-x64/bin/node-gyp -> /root/node-v12.16.1-linux-x64/lib/node_modules/node-gyp/bin/node-gyp.js
-+ node-gyp@6.1.0
-updated 1 package in 52.277s
-[root@iz2ze3os69edbihmn9uji4z nodejs]# npm install -g node-pre-gyp 
-/root/node-v12.16.1-linux-x64/bin/node-pre-gyp -> /root/node-v12.16.1-linux-x64/lib/node_modules/node-pre-gyp/bin/node-pre-gyp
-+ node-pre-gyp@0.14.0
-added 67 packages from 25 contributors in 26.064s
-[root@iz2ze3os69edbihmn9uji4z nodejs]# npm install --save grpc --unsafe-perm 
-npm ERR! code ENOTFOUND
-npm ERR! errno ENOTFOUND
-npm ERR! network request to https://registry.npmjs.org/grpc failed, reason: getaddrinfo ENOTFOUND registry.npmjs.org
-npm ERR! network This is a problem related to network connectivity.
-npm ERR! network In most cases you are behind a proxy or have bad network settings.
-npm ERR! network 
-npm ERR! network If you are behind a proxy, please make sure that the
-npm ERR! network 'proxy' config is set properly.  See: 'npm help config'
 
-npm ERR! A complete log of this run can be found in:
-npm ERR!     /root/.npm/_logs/2020-03-05T09_34_36_988Z-debug.log
-[root@iz2ze3os69edbihmn9uji4z nodejs]# npm install -g cnpm --registry=https://registry.npm.taobao.org
-/root/node-v12.16.1-linux-x64/bin/cnpm -> /root/node-v12.16.1-linux-x64/lib/node_modules/cnpm/bin/cnpm
-+ cnpm@6.1.1
-added 686 packages from 950 contributors in 21.807s
-[root@iz2ze3os69edbihmn9uji4z nodejs]# npm install --save grpc --unsafe-perm 
+#### fabric网络组织结构
 
-> grpc@1.24.2 install /root/github.com/wulusai2333/linuxstudy/wulusai/nodejs/node_modules/grpc
-> node-pre-gyp install --fallback-to-build --library=static_library
+```
+客户端
+	链接peer需要用户身份账号信息,就可以连到同组织的peer节点
+	客户端发起一笔交易
+		会发送到所有参与交易的背书节点上
+		参加背书的节点进行模拟交易
+		背书节点将处理结果发送给客户端你
+		如果提案的结果没问题,客户端将交易提交给orderer节点
+		orderer节点将交易打包
+		leader节点将打包数据同步到当前组织
+		当前组织的提交节点将打包数据写入到区块中
+fabric-ca-sever
+	可以通过他动态创建用户
+	可有可无,因为fabirc是个封闭网络,只是提供了些许灵活性
+组织
+排序节点
+	对交易进行排序
+		解决双花问题
+	对交易打包
+peer节点
+	背书节点
+		进行模拟交易,将结果返回给客户端
+		客户端选择的,指定谁去模拟交易
+	提交节点
+		将orderer节点打包的数据加入到区块链中
+		只要是peer节点,就有提交数据的能力
+	主节点
+		和orderer排序节点直接通信的节点
+			从orderer节点处获取到打包数据
+			将数据同步到当前组织的各个节点中
+		只能有一个
+			可以自己指定
+			也可通过fabric框架自主选举
+	锚节点
+		代表当前组织和其他组织通信的节点
+		只能有一个
+```
 
-node-pre-gyp WARN Using needle for node-pre-gyp https download 
-[grpc] Success: "/root/github.com/wulusai2333/linuxstudy/wulusai/nodejs/node_modules/grpc/src/node/extension_binary/node-v72-linux-x64-glibc/grpc_node.node" is installed via remote
-npm notice created a lockfile as package-lock.json. You should commit this file.
-npm WARN nodejs@1.0.0 No description
-npm WARN nodejs@1.0.0 No repository field.
 
-+ grpc@1.24.2
-added 106 packages from 94 contributors and audited 154 packages in 143.069s
 
-1 package is looking for funding
-  run `npm fund` for details
+SCP远程拷贝
 
-found 0 vulnerabilities
+```shell
+scp 要拷贝的文件路径 远程主机用户名@远程主机ip:远程主机目录
+scp -r 要拷贝的目录 远程主机用户名@远程主机ip:远程主机目录
+scp -r /root/wulusai root@192.168.1.2:/root
 
-[root@iz2ze3os69edbihmn9uji4z nodejs]# npm install --save fabric-ca-client --unsafe-perm
+#安装同一个链码文件时有可能出现指纹不匹配的问题,可以用如下方式安装
+#安装链码 在一个节点上安装完链码,打包然后远程拷贝到其他节点主机上
+#将链码打包
+peer chaincode package -n bhxycc -v 1.0 -p github.com/chaincode bhxycc.1.0.out
+#将链码从容器中拷贝到主机上
+docker cp cli:/opt/gopath/src/github.com/hyperledger/fabric/peer/bhxycc.1.0.out ./
+#scp发送到远程主机
+scp ./bhxycc.1.0.out root@192.168.1.2:/root/wulusai/channel-artifacts
 
-> grpc@1.23.3 install /root/github.com/wulusai2333/linuxstudy/wulusai/nodejs/node_modules/fabric-ca-client/node_modules/grpc
-> node-pre-gyp install --fallback-to-build --library=static_library
+#进入另一个主机的cli容器中
+docker exec -it cli bash
+#安装链码
+peer chaincode install ./channel-artifacts/bhxycc.1.0.out
+```
 
-node-pre-gyp WARN Using needle for node-pre-gyp https download 
-[grpc] Success: "/root/github.com/wulusai2333/linuxstudy/wulusai/nodejs/node_modules/fabric-ca-client/node_modules/grpc/src/node/extension_binary/node-v72-linux-x64-glibc/grpc_node.node" is installed via remote
-npm WARN nodejs@1.0.0 No description
-npm WARN nodejs@1.0.0 No repository field.
+#### kafka多级多节点配置
 
-+ fabric-ca-client@1.4.7
-added 74 packages from 32 contributors in 151.19s
+```shell
+#为保证集群的可用性,3台主机
+#zookeeper主机1:192.168.100.101
+#zookeeper主机2:192.168.100.102
+#zookeeper主机3:192.168.100.103
+#kafka集群至少4个主机才行
+#kafka主机1:192.168.100.201 
+#kafka主机2:192.168.100.202
+#kafka主机3:192.168.100.203
+#kafka主机4:192.168.100.204
+# 同样最低3台
+#orderer主机3:192.168.100.20
+#orderer主机3:192.168.100.21
+#orderer主机3:192.168.100.22
+# 两个组织一个组织一个peer节点
+#peer主机3:192.168.100.30
+#peer主机3:192.168.100.40
+```
 
-1 package is looking for funding
-  run `npm fund` for details
+zookeeper配置
 
-[root@iz2ze3os69edbihmn9uji4z nodejs]# npm install --save fabric-client --unsafe-perm
-npm WARN deprecated request@2.88.2: request has been deprecated, see https://github.com/request/request/issues/3142
+```yaml
+version: '2'
 
-> grpc@1.23.3 install /root/github.com/wulusai2333/linuxstudy/wulusai/nodejs/node_modules/fabric-client/node_modules/grpc
-> node-pre-gyp install --fallback-to-build --library=static_library
+services:
 
-node-pre-gyp WARN Using request for node-pre-gyp https download 
-[grpc] Success: "/root/github.com/wulusai2333/linuxstudy/wulusai/nodejs/node_modules/fabric-client/node_modules/grpc/src/node/extension_binary/node-v72-linux-x64-glibc/grpc_node.node" is installed via remote
+  zookeeper1:
+    container_name: zookeeper1
+    hostname: zookeeper1
+    image: hyperledger/fabric-zookeeper:latest
+    restart: always
+    environment:
+      # ID在集合中必须是唯一的并且应该有一个值，在1和255之间。
+      - ZOO_MY_ID=1
+      # server.x=[hostname]:nnnnn[:nnnnn]
+      - ZOO_SERVERS=server.1=zookeeper1:2888:3888 server.2=zookeeper2:2888:3888 server.3=zookeeper3:2888:3888
+    ports:
+      - 2181:2181
+      - 2888:2888
+      - 3888:3888
+    extra_hosts:
+      - zookeeper1:192.168.100.101
+      - zookeeper2:192.168.100.102
+      - zookeeper3:192.168.100.103
+      - kafka1:192.168.100.201
+      - kafka2:192.168.100.202
+      - kafka3:192.168.100.203
+      - kafka4:192.168.100.204
+```
 
-> pkcs11js@1.0.19 install /root/github.com/wulusai2333/linuxstudy/wulusai/nodejs/node_modules/pkcs11js
-> node-gyp rebuild
+kafka配置
 
-make: Entering directory `/root/github.com/wulusai2333/linuxstudy/wulusai/nodejs/node_modules/pkcs11js/build'
-  CXX(target) Release/obj.target/pkcs11/src/main.o
-make: g++: Command not found
-make: *** [Release/obj.target/pkcs11/src/main.o] Error 127
-make: Leaving directory `/root/github.com/wulusai2333/linuxstudy/wulusai/nodejs/node_modules/pkcs11js/build'
-gyp ERR! build error 
-gyp ERR! stack Error: `make` failed with exit code: 2
-gyp ERR! stack     at ChildProcess.onExit (/root/node-v12.16.1-linux-x64/lib/node_modules/npm/node_modules/node-gyp/lib/build.js:194:23)
-gyp ERR! stack     at ChildProcess.emit (events.js:311:20)
-gyp ERR! stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:275:12)
-gyp ERR! System Linux 3.10.0-1062.4.1.el7.x86_64
-gyp ERR! command "/root/node-v12.16.1-linux-x64/bin/node" "/root/node-v12.16.1-linux-x64/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js" "rebuild"
-gyp ERR! cwd /root/github.com/wulusai2333/linuxstudy/wulusai/nodejs/node_modules/pkcs11js
-gyp ERR! node -v v12.16.1
-gyp ERR! node-gyp -v v5.1.0
-gyp ERR! not ok 
-npm WARN nodejs@1.0.0 No description
-npm WARN nodejs@1.0.0 No repository field.
-npm WARN optional SKIPPING OPTIONAL DEPENDENCY: pkcs11js@1.0.19 (node_modules/pkcs11js):
-npm WARN optional SKIPPING OPTIONAL DEPENDENCY: pkcs11js@1.0.19 install: `node-gyp rebuild`
-npm WARN optional SKIPPING OPTIONAL DEPENDENCY: Exit status 1
+```yaml
 
-+ fabric-client@1.4.7
-added 174 packages from 121 contributors in 57.17s
+version: '2'
 
-1 package is looking for funding
-  run `npm fund` for details
+services:
 
-[root@iz2ze3os69edbihmn9uji4z nodejs]# 
+  kafka1:
+    container_name: kafka1
+    hostname: kafka1
+    image: hyperledger/fabric-kafka
+    restart: always
+    environment:
+      # broker.id
+      - KAFKA_BROKER_ID=1 
+      - KAFKA_MIN_INSYNC_REPLICAS=2 #最小备份数
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=3 #默认备份数
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      # 100 * 1024 * 1024 B
+      - KAFKA_MESSAGE_MAX_BYTES=104857600  #最大信息个头 根据orderer节点打包区块大小设置,orderer默认99M 这里信息包括消息头 所以给100M
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=104857600 #配置同上
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1 #记录日志的时间间隔 -1表示不记录
+      - KAFKA_HEAP_OPTS=-Xmx512M -Xms256M #堆内存 默认1G
+    ports:
+      - 9092:9092
+    extra_hosts:
+      - zookeeper1:192.168.100.101
+      - zookeeper2:192.168.100.102
+      - zookeeper3:192.168.100.103
+      - kafka1:192.168.100.201
+      - kafka2:192.168.100.202
+      - kafka3:192.168.100.203
+      - kafka4:192.168.100.204
+```
 
+orderer配置
+
+```yaml
+version: '2'
+
+services:
+
+  orderer0.wulusai.net:
+    container_name: orderer0.wulusai.net
+    image: hyperledger/fabric-orderer:latest
+    environment:
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=kafka_default #注意这里的网络设置
+      - ORDERER_GENERAL_LOGLEVEL=debug
+      - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
+      - ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_GENESISMETHOD=file
+      - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
+      - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
+      - ORDERER_GENERAL_LOCALMSPDIR=/var/hyperledger/orderer/msp
+      # enabled TLS
+      - ORDERER_GENERAL_TLS_ENABLED=false
+      - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
+      - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
+
+      - ORDERER_KAFKA_RETRY_LONGINTERVAL=10s
+      - ORDERER_KAFKA_RETRY_LONGTOTAL=100s
+      - ORDERER_KAFKA_RETRY_SHORTINTERVAL=1s
+      - ORDERER_KAFKA_RETRY_SHORTTOTAL=30s
+      - ORDERER_KAFKA_VERBOSE=true
+      - ORDERER_KAFKA_BROKERS=[192.168.100.201:9092,192.168.100.202:9092,192.168.100.203:9092,192.168.100.204:9092] #kafka主机的地址
+    working_dir: /opt/gopath/src/github.com/hyperledger/fabric
+    command: orderer
+    volumes:
+      - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
+      - ./crypto-config/ordererOrganizations/test.com/orderers/orderer0.wulusai.net/msp:/var/hyperledger/orderer/msp
+      - ./crypto-config/ordererOrganizations/test.com/orderers/orderer0.wulusai.net/tls/:/var/hyperledger/orderer/tls
+    networks:
+      default:
+        aliases:
+         - kafka
+    ports:
+      - 7050:7050
+    extra_hosts:
+      - kafka1:192.168.100.201
+      - kafka2:192.168.100.202
+      - kafka3:192.168.100.203
+      - kafka4:192.168.100.204
 ```
 

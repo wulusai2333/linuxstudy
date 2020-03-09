@@ -6,9 +6,9 @@
 echo $PATH #打印path
 which go #看看 go 这个命令在哪
 pwd #进程工作目录
-chmod u+x test.sh # u是文件所有者 +x 是加可执行权限
-sh test.sh #作用跟 ./test.sh 一样
-./test.sh
+chmod u+x orderer.sh # u是文件所有者 +x 是加可执行权限
+sh orderer.sh #作用跟 ./orderer.sh 一样
+./orderer.sh
 #shell中定义变量 shell的变量等号前后不能空格 " = " 的等号等价于 "=="
 temp=123  #变量只能在当前进程使用
 #环境变量 全局变量 在当前系统内可以访问
@@ -25,7 +25,7 @@ export GOPATH=/user/go/src #导入
 ~/.bashrc #上面的导入到这里
 
 #位置变量
-./test aa bb cc
+./orderer aa bb cc
 #如何获取参数
 $0 #脚本本身的名字
 $1 #第一个参数 aa
