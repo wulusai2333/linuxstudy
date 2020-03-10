@@ -1,0 +1,34 @@
+version: "2"
+services:
+  db:
+    image: mysql:5.7
+    volumes:
+      - /var/lib/mysql:/var/lib/mysql
+    #自动重启
+    restart: always
+    environment:
+      #指定MySQL的root账号初始密码
+      MYSQL_ROOT_PASSWORD: root!123456
+      #指定容器启动后要创建的数据库
+      MYSQL_DATABASE: wordpress
+      #指定容器在启动后要创建的普通用户账号，该账号有远程登录的权限
+      MYSQL_USER: wulusai
+      #为用户设置密码
+      MYSQL_PASSWORD: wlc123456
+  wordpress:
+    container_name: wulusai.net
+    depends_on:
+      - db
+    image: wordpress
+    ports:
+      - "8000:80"
+    restart: always
+    environment:
+      #指定要使用的数据库名
+      WORDPRESS_DB_NAME: wordpress
+      #指定要MySQL容器的ip和端口
+      WORDPRESS_DB_HOST: db:3306
+      #指定登录MySQL的账号
+      WORDPRESS_DB_USER: wulusai
+      #指定登录MySQL的密码
+      WORDPRESS_DB_PASSWORD: wlc123456

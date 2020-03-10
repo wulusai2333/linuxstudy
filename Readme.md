@@ -871,3 +871,66 @@ services:
       - kafka4:192.168.100.204
 ```
 
+##### 启用kafka集群
+
+```shell
+cd kafka
+#按顺序启动容器 此处假设已经完成了目录的创建,并且通过cryptogen生成的文件和configtxgen生成的区块等文件已经放到了对应的主机上
+docker-compose up -d -f zookeeper.yaml
+docker-compose up -d -f kafka.yaml
+docker-compose up -d -f orderer.yaml
+docker-compose up -d -f peer.yaml
+```
+
+#### 实例演示
+
+```go
+/*
+假设有如下场景:
+	养牛场 dairy farm 牛奶加工厂 milk processing factory 销售商 seller
+他们之间需要建立一个fabric网络,保证每一瓶出产的牛奶商品都可以溯源
+那么他们需要怎么建立 
+Organization: dairy  process sell
+chaincode: dairy.go process.go seller.go
+假设每个组织有三个成员
+crypto-config.yaml 中配置组织和成员的秘钥材料生成规则
+configtx.yaml 配置各组织交互规则权限
+
+溯源流程:
+每袋牛奶上有个ID,唯一标识
+通过标识查出牛奶是谁卖出去的 ->狗东
+根据狗东的标识查询 -> 狗东的供应商
+根据供应商(加工厂) -> 来自哪个牛奶厂
+通过奶牛场 -> 查到牛情况
+```
+
+##### 链码编写分析
+
+```go
+/*
+Init函数调用时机: instantiate时/upgrade时
+Invoke调用: peer invoke
+
+调用函数
+GetState
+PutState
+GetHistoryForKey
+
+消费者 invoke调用,参数:牛奶盒上的ID
+ values:= stub.GetHistoryForKey(ID)
+ values是个json字符串 里面包含了经销商信息,经销商从哪个地方进货的信息
+ 
+ 链码调用:
+ stub.InvokeChaincode("process",args,"channel")
+ 
+```
+
+使用fabric与传统程序有何优势?
+
+第一,由于从客户端到排序服务都是多节点验证,保证了程序难以被破坏和篡改
+
+第二,fabric生成链的形式,保证了每一个操作记录都能被找到且历史不可篡改
+
+fabric数据以区块的形式保存,而且想要访问区块数据,必须要用fabric的链码访问,而想要调用链码,则必须是网络的用户,使用正确的用户的证书才能在网络中调用链码
+
+并且链码在多个节点中都有备份,想通过攻击某一节点对网络进行篡改或者破坏都比传统系统难上不少

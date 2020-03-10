@@ -19,12 +19,12 @@ services:
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/var/hyperledger/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/var/hyperledger/orderer/tls/server.crt
       - ORDERER_GENERAL_TLS_ROOTCAS=[/var/hyperledger/orderer/tls/ca.crt]
-
-      - ORDERER_KAFKA_RETRY_LONGINTERVAL=10s
-      - ORDERER_KAFKA_RETRY_LONGTOTAL=100s
-      - ORDERER_KAFKA_RETRY_SHORTINTERVAL=1s
-      - ORDERER_KAFKA_RETRY_SHORTTOTAL=30s
-      - ORDERER_KAFKA_VERBOSE=true
+      #orderer链接kafka重试的时长
+      - ORDERER_KAFKA_RETRY_LONGINTERVAL=10s #尝试的时间间隔 第二阶段
+      - ORDERER_KAFKA_RETRY_LONGTOTAL=100s #重试时长 第二阶段
+      - ORDERER_KAFKA_RETRY_SHORTINTERVAL=1s #尝试的时间间隔 第一阶段
+      - ORDERER_KAFKA_RETRY_SHORTTOTAL=30s #重试时长 第一阶段
+      - ORDERER_KAFKA_VERBOSE=true #orderer与kafka通信是否启用日志
       - ORDERER_KAFKA_BROKERS=[192.168.100.201:9092,192.168.100.202:9092,192.168.100.203:9092,192.168.100.204:9092]
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
