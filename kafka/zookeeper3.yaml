@@ -2,9 +2,9 @@ version: '2'
 
 services:
 
-  zookeeper1.wulusai.net:
-    container_name: zookeeper1.wulusai.net
-    hostname: zookeeper1.wulusai.net
+  zookeeper3.wulusai.net:
+    container_name: zookeeper3.wulusai.net
+    hostname: zookeeper3.wulusai.net
     image: hyperledger/fabric-zookeeper:latest
     restart: always
     environment:
