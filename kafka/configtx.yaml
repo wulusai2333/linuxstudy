@@ -425,11 +425,11 @@ Profiles:
                   ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer5.wulusai.net/tls/server.crt
                   ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer5.wulusai.net/tls/server.crt
             Addresses:
-                - orderer.wulusai.net:7050
+                - orderer0.wulusai.net:7050
+                - orderer1.wulusai.net:7050
                 - orderer2.wulusai.net:7050
                 - orderer3.wulusai.net:7050
                 - orderer4.wulusai.net:7050
-                - orderer5.wulusai.net:7050
 
             Organizations:
             - *OrdererOrg

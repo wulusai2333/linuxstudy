@@ -18,7 +18,7 @@ volumes:
   orderer3.wulusai.net:
   orderer0.wulusai.net:
   peer0.org1.wulusai.net:
-  #peer1.org1.wulusai.net:
+#  peer1.org1.wulusai.net:
   peer0.org2.wulusai.net:
   #peer1.org2.wulusai.net:
   ca0.wulusai.net:
@@ -147,21 +147,21 @@ services: #服务
     networks:
       - wulusai
 
-#  peer1.org1.wulusai.net:
-#    container_name: peer1.org1.wulusai.net
-#    extends:
-#      file:  base/docker-compose-base.yaml
-#      service: peer1.org1.wulusai.net
-#    networks:
-#      - wulusai
-
-  peer0.org2.wulusai.net:
-    container_name: peer0.org2.wulusai.net
+  peer1.org1.wulusai.net:
+    container_name: peer1.org1.wulusai.net
     extends:
-      file:  docker-compose-peer1org1.yaml
-      service: peer0.org2.wulusai.net
+      file:  base/docker-compose-base.yaml
+      service: peer1.org1.wulusai.net
     networks:
       - wulusai
+
+#  peer0.org2.wulusai.net:
+#    container_name: peer0.org2.wulusai.net
+#    extends:
+#      file:  docker-compose-peer1org1.yaml
+#      service: peer0.org2.wulusai.net
+#    networks:
+#      - wulusai
 
 #  peer1.org2.wulusai.net:
 #    container_name: peer1.org2.wulusai.net
@@ -192,16 +192,16 @@ services: #服务
       - orderer0.wulusai.net
       - peer0.org1.wulusai.net
       #peer1.org1.wulusai.net:
-      - peer0.org2.wulusai.net
+#      - peer0.org2.wulusai.net
       #peer1.org2.wulusai.net:
       - ca0.wulusai.net
-      - ca1.wulusai.net
+#      - ca1.wulusai.net
 
-  p1o1cli:
-    container_name: p1o1cli
+  p0o2cli:
+    container_name: p0o2cli
     extends:
-      file:  docker-compose-peer1org1.yaml
-      service: p1o1cli
+      file:  docker-compose-peer0org2.yaml
+      service: p0o2cli
     networks:
       - wulusai
     depends_on:
@@ -216,11 +216,11 @@ services: #服务
      - orderer2.wulusai.net
      - orderer3.wulusai.net
      - orderer0.wulusai.net
-     - peer0.org1.wulusai.net
-      #peer1.org1.wulusai.net:
-     - peer0.org2.wulusai.net
+#     - peer0.org1.wulusai.net
+     - peer1.org1.wulusai.net
+#     - peer0.org2.wulusai.net
       #peer1.org2.wulusai.net:
-     - ca0.wulusai.net
+#     - ca0.wulusai.net
      - ca1.wulusai.net
 
 
