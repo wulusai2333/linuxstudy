@@ -27,6 +27,14 @@ sudo apt-get update
 sudo apt-get install apt-transport-https ca-certificates curl git software-properties-common lrzsz -y
 #添加阿里的docker镜像仓库
 apt-get install docker-ce -y
+#docker 在ubuntu18.04安装不上
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+#添加docke源
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+sudo apt update
+apt-cache policy docker-ce
+sudo apt install docker-ce
+#docker 可以配置阿里云镜像
 #用非root用户操作是可能权限不足 当前用户加入docker组中
 sudo gpasswd -a ${USER} docker
 systemctl restart docker
@@ -36,8 +44,13 @@ sudo docker version
 sudo apt-get install python-pip -y
 sudo pip install docker-compose
 sudo docker-compose version
+#ifconfig
+apt-get install net-tools
+#安装vim
+apt-get install vim
 #安装go
-wget go安装包
+wget https://studygolang.com/dl/golang/go1.13.4.linux-amd64.tar.gz
+tar xfz go1.13.4.linux-amd64.tar.gz -C
 tar zxvf go安装包 -C /use/local
 mkdir $HOME/go
 vim ~/.bashrc
@@ -49,7 +62,7 @@ source ~/.bashrc
 . ~/.bashrc #对当前用户生效
 go version
 安装mode.js
-wget 安装包
+wget https://nodejs.org/dist/v12.16.2/node-v12.16.2.tar.gz
 #解压 /opt
 sudo tar -xvf 安装包 -C /opt
 sudo vim /etc/profile
@@ -57,16 +70,26 @@ sudo vim /etc/profile
 	export PATH=$PATH:$NODEJS_HOME/bin
 . /etc/profile #对操作系统生效
 node -v
-
+#开启远程连接
+sudo apt-get install openssh-server
+#看看端口有没有打开
+netstat -nat | grep 22
+#关闭防火墙
+sudo ufw disable
 ```
 
 #### 2.安装fabric-sample
 
 ```shell
+#可以获取的是官方最新版的
+wget https://raw.githubusercontent.com/hyperledger/fabric/master/scripts/bootstrap.sh
+#可以这样指定版本
+curl -sSL http://bit.ly/2ysbOFE | bash -s -- 1.4.2 1.4.2 0.4.15
 #需要注意fabric项目安装位置在GOPATH的src目录下github.com/hyperledger/
 #可以使用git clone拉取项目
 #或者参考fabric官方文档使用curl 下载 bootstrap.sh
 #下载过程中 hyperledger-fabric-ca-amd64-1.4.4.tar.gz hyperledger-fabric-ca-amd64-1.4.4.tar.gz 这两个包下载极慢,可以直接将此包放到fabric-sample中减少下载时间
+#实在下载不动的解决办法,可以尝试用wget单独下载两个包或者用windows下载后上传到服务器
 #拉取镜像
 fabric-peer #peer模块镜像
 fabric-orderer #order节点
@@ -934,3 +957,165 @@ GetHistoryForKey
 fabric数据以区块的形式保存,而且想要访问区块数据,必须要用fabric的链码访问,而想要调用链码,则必须是网络的用户,使用正确的用户的证书才能在网络中调用链码
 
 并且链码在多个节点中都有备份,想通过攻击某一节点对网络进行篡改或者破坏都比传统系统难上不少
+
+
+
+**为什么使用fabirc**
+
+**fabric区块数据是加密的吗?**
+
+只要经过提案的交易无论是否有效都会被打包进区块链
+
+tls加密 通信网络的加密,保证了数据传输过程中不会被窃听和篡改
+
+X.509 密码学里公钥证书的格式标准
+
+**fabric怎么保存数据的?**
+
+每个块的块号是唯一的，从零开始按顺序分配。链中的第一个区块是特殊的，称为起源区块，其编号为零。genesis块的previous hash设置为nil，而下一个块的PreviousHash保存上一个块的BlockHeader的SHA256散列。DataHash保存当前块的块数据的SHA256散列。
+
+```
+L : ledger    W : World State	B : blockchain
+L comprises W&B
+B determines W
+-------------------
+B : blockchain		B1 : block		H3 : block header	D1 : block data	
+T5 : transaction	M3 : block metadata		H2->H1 : H2 is chained to H1
+B:
+    B0:{H0,D0[genesis],M0}
+    B1:{H1,D1[T1,T2,T3,T4],M1}
+    B2:{H2,D2[T5,T6,T7],M2}
+    B3:{H3,D3[T8,T9],M3}
+H2包含了D2的所有交易的加密哈希和H1的哈希 H2 = D2HASH + H1Hash
+D0包含配置信息
+```
+
+
+
+
+
+```
+hyperledger
+1.了解hyperledger fabric 框架的详细原理
+
+2.hyperledger性能怎么样
+
+其他
+1.了解docker
+
+2.了解zookerper
+
+2.一些常见的公式算法 pow pos dpos raft poa 拜占庭算法
+
+3.常见的数据结构和算法
+
+5.如何解决双花问题
+什么是双花? 区块链之前加密数字货币和其他数字资产都具有无限可复制性
+利用网络延迟双重支付
+6.如何解决拜占庭问题
+
+7.redis如何解决分布式集群问题
+
+```
+
+#### 向通道添加组织
+
+```go
+//在前面的学习中,一个组织实际代表一类机构,而要向通道添加组织,意味着整个网络需要多加一层结构,在设计网络之初应该不需要这样的操作,但是网络运行了一段时间后,可能就需要添加其他结构了
+
+//这里有个疑问,fabric中orderer是如何添加的,在证书生成部分,有crypto-config.yaml文件生成整体的证书,要是服务中要改变orderer个数或者orderer模式的策略该如何执行?
+
+
+```
+
+生成org3身份材料的配置文件 org3-crypto.yaml
+
+```yaml
+PeerOrgs:
+  - Name: Org3
+    Domain: org3.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 2
+    Users:
+      Count: 1
+```
+
+
+
+```shell
+cd org3-artifacts #当前操作所在的目录
+cryptogen generate --config=./org3-crypto.yaml
+```
+
+json格式打印org3材料
+
+```shell
+#没有指定configtx配置文件因为configtxgen会默认使用当前目录下的这个文件
+export FABRIC_CFG_PATH=$PWD && ../../bin/configtxgen -printOrg Org3MSP > ../channel-artifacts/org3.json
+```
+
+进入到cli容器中生成org3的配置并加入到区块中
+
+```shell
+docker exec -it cli bash
+#设置了ORDERER_CA和CHANNEL_NAME两个环节变量
+export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem  && export CHANNEL_NAME=mychannel
+#获取配置 peer channel fetch config取一个配置块 这个操作取到最新区块索引取决于之前所做的操作,如果没有更新锚节点,则只有创世区块,如果有更新锚节点的操作则会产生其他的配置区块
+peer channel fetch config config_block.pb -o orderer.example.com:7050 -c $CHANNEL_NAME --tls --cafile $ORDERER_CA
+#下面的部分 jq这个工具哪来的?
+#裁剪输出的json格式 configtxlator 
+configtxlator proto_decode --input config_block.pb --type common.Block | jq .data.data[0].payload.data.config > config.json
+#添加org3加密材料
+jq -s '.[0] * {"channel_group":{"groups":{"Application":{"groups": {"Org3MSP":.[1]}}}}}' config.json ./channel-artifacts/org3.json > modified_config.json
+#
+configtxlator proto_encode --input config.json --type common.Config --output config.pb
+#
+configtxlator proto_encode --input modified_config.json --type common.Config --output modified_config.pb
+#
+configtxlator compute_update --channel_id $CHANNEL_NAME --original config.pb --updated modified_config.pb --output org3_update.pb
+#
+configtxlator proto_decode --input org3_update.pb --type common.ConfigUpdate | jq . > org3_update.json
+#
+echo '{"payload":{"header":{"channel_header":{"channel_id":"mychannel", "type":2}},"data":{"config_update":'$(cat org3_update.json)'}}}' | jq . > org3_update_in_envelope.json
+#一顿操作猛如虎,终于将配置文件修改为org3的配置快了
+configtxlator proto_encode --input org3_update_in_envelope.json --type common.Envelope --output org3_update_in_envelope.pb
+#更新配置块到链上 此时使用的是org1管理员身份
+peer channel signconfigtx -f org3_update_in_envelope.pb
+#切换到org2管理员身份 将更新发布到网络中
+peer channel update -f org3_update_in_envelope.pb -c $CHANNEL_NAME -o orderer.example.com:7050 --tls --cafile $ORDERER_CA
+#现在org3的配置已经在区块中了(不得不吐槽一下,这个操作太原始太繁琐和反人类了)
+#配置文件中这两个选项
+CORE_PEER_GOSSIP_USELEADERELECTION=false
+CORE_PEER_GOSSIP_ORGLEADER=true
+
+
+```
+
+将org3加入通道
+
+```shell
+#启动org3 两个peer节点和一个org3cli容器
+docker-compose -f docker-compose-org3.yaml up -d
+#进入到cli
+docker exec -it Org3cli bash
+#设置环境变量
+export ORDERER_CA=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem && export CHANNEL_NAME=mychannel
+#fetch获取区块 得到的是0索引也就是创世区块
+peer channel fetch 0 mychannel.block -o orderer.example.com:7050 -c $CHANNEL_NAME --tls --cafile $ORDERER_CA
+#指定初始区块
+peer channel join -b mychannel.block
+#安装链码
+peer chaincode install -n mycc -v 2.0 -p github.com/chaincode/chaincode_example02/go/
+#在 cli容器中安装新版本链码 org1和org2都要装
+peer chaincode install -n mycc -v 2.0 -p github.com/chaincode/chaincode_example02/go/
+#发送升级申请并指定背书规则
+peer chaincode upgrade -o orderer.example.com:7050 --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -v 2.0 -c '{"Args":["init","a","90","b","210"]}' -P "OR ('Org1MSP.peer','Org2MSP.peer','Org3MSP.peer')"
+#查询一下
+peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}'
+#调用一下看看新的背书规则有没有生效
+peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA -C $CHANNEL_NAME -n mycc -c '{"Args":["invoke","a","b","10"]}'
+#再看看
+peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}'
+```
+

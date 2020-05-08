@@ -3,9 +3,9 @@ version: '2'
 
 services:
 
-  kafka1:
-    container_name: kafka1
-    hostname: kafka1
+  kafka1.wulusai.net:
+    container_name: kafka1.wulusai.net
+    hostname: kafka1.wulusai.net
     image: hyperledger/fabric-kafka
     restart: always
     environment:
@@ -13,7 +13,8 @@ services:
       - KAFKA_BROKER_ID=1
       - KAFKA_MIN_INSYNC_REPLICAS=2 #最小备份数 要小于默认备份数
       - KAFKA_DEFAULT_REPLICATION_FACTOR=3 #默认备份数 要小于集群总数
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      #- KAFKA_ZOOKEEPER_CONNECT=zookeeper1:2181,zookeeper2:2181,zookeeper3:2181
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper1.wulusai.net:2181,zookeeper2.wulusai.net:2182,zookeeper3.wulusai.net:2183
       # 100 * 1024 * 1024 B
       - KAFKA_MESSAGE_MAX_BYTES=104857600  #最大信息个头 根据orderer节点打包区块大小设置,orderer默认99M 这里信息包括消息头 所以给100M
       - KAFKA_REPLICA_FETCH_MAX_BYTES=104857600 #配置同上
@@ -23,10 +24,17 @@ services:
     ports:
       - 9092:9092
     extra_hosts:
-      - zookeeper1:192.168.100.101
-      - zookeeper2:192.168.100.102
-      - zookeeper3:192.168.100.103
-      - kafka1:192.168.100.201
-      - kafka2:192.168.100.202
-      - kafka3:192.168.100.203
-      - kafka4:192.168.100.204
+#      - zookeeper1:192.168.100.101
+#      - zookeeper2:192.168.100.102
+#      - zookeeper3:192.168.100.103
+#      - kafka1:192.168.100.201
+#      - kafka2:192.168.100.202
+#      - kafka3:192.168.100.203
+#      - kafka4:192.168.100.204
+      - zookeeper1.wulusai.net:127.0.0.1
+      - zookeeper2.wulusai.net:127.0.0.1
+      - zookeeper3.wulusai.net:127.0.0.1
+      - kafka1.wulusai.net:127.0.0.1
+      - kafka2.wulusai.net:127.0.0.1
+      - kafka3.wulusai.net:127.0.0.1
+      - kafka4.wulusai.net:127.0.0.1
