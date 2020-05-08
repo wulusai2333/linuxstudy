@@ -34,7 +34,7 @@ services: #服务
     extends: #继承
       file:   docker-compose-peer0org1.yaml #继承的文件位置
       service: ca.wulusai.net #继承文件中的服务
-    container_name: ca1.wulusai.net
+    container_name: ca0.wulusai.net
     networks:
       - wulusai
 
