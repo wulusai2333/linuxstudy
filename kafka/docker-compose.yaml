@@ -37,6 +37,8 @@ services: #服务
     container_name: ca0.wulusai.net
     networks:
       - wulusai
+    depends_on:
+      - peer0.org1.wulusai.net
 
   ca1.wulusai.net: #fabric-ca 的服务器名,随意
     extends: #继承
@@ -45,7 +47,8 @@ services: #服务
     container_name: ca1.wulusai.net
     networks:
       - wulusai
-
+    depends_on:
+      - peer0.org2.wulusai.net
 
 #orderer
   orderer0.wulusai.net: #为了方便看 服务名跟域名相同
@@ -55,6 +58,11 @@ services: #服务
     container_name: orderer0.wulusai.net #容器名字
     networks:
       - wulusai
+    depends_on:
+      - kafka1.wulusai.net
+      - kafka2.wulusai.net
+      - kafka3.wulusai.net
+      - kafka4.wulusai.net
 
   orderer1.wulusai.net: #为了方便看 服务名跟域名相同
     extends: #继承
@@ -63,6 +71,11 @@ services: #服务
     container_name: orderer1.wulusai.net #容器名字
     networks:
       - wulusai
+    depends_on:
+      - kafka1.wulusai.net
+      - kafka2.wulusai.net
+      - kafka3.wulusai.net
+      - kafka4.wulusai.net
 
   orderer2.wulusai.net: #为了方便看 服务名跟域名相同
     extends: #继承
@@ -71,6 +84,11 @@ services: #服务
     container_name: orderer2.wulusai.net #容器名字
     networks:
       - wulusai
+    depends_on:
+      - kafka1.wulusai.net
+      - kafka2.wulusai.net
+      - kafka3.wulusai.net
+      - kafka4.wulusai.net
 
   orderer3.wulusai.net: #为了方便看 服务名跟域名相同
     extends: #继承
@@ -79,6 +97,11 @@ services: #服务
     container_name: orderer3.wulusai.net #容器名字
     networks:
       - wulusai
+    depends_on:
+      - kafka1.wulusai.net
+      - kafka2.wulusai.net
+      - kafka3.wulusai.net
+      - kafka4.wulusai.net
 
 #zookeeper
   zookeeper1.wulusai.net: #为了方便看 服务名跟域名相同
@@ -113,6 +136,10 @@ services: #服务
     container_name: kafka1.wulusai.net #容器名字
     networks:
       - wulusai
+    depends_on:
+      - zookeeper1.wulusai.net
+      - zookeeper2.wulusai.net
+      - zookeeper3.wulusai.net
 
   kafka2.wulusai.net: #为了方便看 服务名跟域名相同
     extends: #继承
@@ -121,6 +148,10 @@ services: #服务
     container_name: kafka2.wulusai.net #容器名字
     networks:
       - wulusai
+    depends_on:
+      - zookeeper1.wulusai.net
+      - zookeeper2.wulusai.net
+      - zookeeper3.wulusai.net
 
   kafka3.wulusai.net: #为了方便看 服务名跟域名相同
     extends: #继承
@@ -129,6 +160,10 @@ services: #服务
     container_name: kafka3.wulusai.net #容器名字
     networks:
       - wulusai
+    depends_on:
+      - zookeeper1.wulusai.net
+      - zookeeper2.wulusai.net
+      - zookeeper3.wulusai.net
 
   kafka4.wulusai.net: #为了方便看 服务名跟域名相同
     extends: #继承
@@ -137,6 +172,10 @@ services: #服务
     container_name: kafka4.wulusai.net #容器名字
     networks:
       - wulusai
+    depends_on:
+      - zookeeper1.wulusai.net
+      - zookeeper2.wulusai.net
+      - zookeeper3.wulusai.net
 
 #peer
   peer0.org1.wulusai.net:
@@ -146,6 +185,11 @@ services: #服务
       service: peer0.org1.wulusai.net
     networks:
       - wulusai
+    depends_on:
+      - orderer1.wulusai.net
+      - orderer2.wulusai.net
+      - orderer3.wulusai.net
+      - orderer0.wulusai.net
 
 #  peer1.org1.wulusai.net:
 #    container_name: peer1.org1.wulusai.net
@@ -162,6 +206,11 @@ services: #服务
       service: peer0.org2.wulusai.net
     networks:
       - wulusai
+    depends_on:
+      - orderer1.wulusai.net
+      - orderer2.wulusai.net
+      - orderer3.wulusai.net
+      - orderer0.wulusai.net
 
 #  peer1.org2.wulusai.net:
 #    container_name: peer1.org2.wulusai.net
@@ -179,23 +228,13 @@ services: #服务
     networks:
       - wulusai
     depends_on:
-      - zookeeper1.wulusai.net
-      - zookeeper2.wulusai.net
-      - zookeeper3.wulusai.net
-      - kafka1.wulusai.net
-      - kafka2.wulusai.net
-      - kafka3.wulusai.net
-      - kafka4.wulusai.net
       - orderer1.wulusai.net
       - orderer2.wulusai.net
       - orderer3.wulusai.net
       - orderer0.wulusai.net
       - peer0.org1.wulusai.net
-      #peer1.org1.wulusai.net:
-#      - peer0.org2.wulusai.net
-      #peer1.org2.wulusai.net:
       - ca0.wulusai.net
-#      - ca1.wulusai.net
+
 
   p0o2cli:
     container_name: p0o2cli
@@ -205,22 +244,11 @@ services: #服务
     networks:
       - wulusai
     depends_on:
-     - zookeeper1.wulusai.net
-     - zookeeper2.wulusai.net
-     - zookeeper3.wulusai.net
-     - kafka1.wulusai.net
-     - kafka2.wulusai.net
-     - kafka3.wulusai.net
-     - kafka4.wulusai.net
      - orderer1.wulusai.net
      - orderer2.wulusai.net
      - orderer3.wulusai.net
      - orderer0.wulusai.net
-#     - peer0.org1.wulusai.net
-#     - peer1.org1.wulusai.net
      - peer0.org2.wulusai.net
-      #peer1.org2.wulusai.net:
-#     - ca0.wulusai.net
      - ca1.wulusai.net
 
 
