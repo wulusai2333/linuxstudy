@@ -178,24 +178,24 @@ services: #服务
       service: p0o1cli
     networks:
       - wulusai
-    depends_on:
-      - zookeeper1.wulusai.net
-      - zookeeper2.wulusai.net
-      - zookeeper3.wulusai.net
-      - kafka1.wulusai.net
-      - kafka2.wulusai.net
-      - kafka3.wulusai.net
-      - kafka4.wulusai.net
-      - orderer1.wulusai.net
-      - orderer2.wulusai.net
-      - orderer3.wulusai.net
-      - orderer0.wulusai.net
-      - peer0.org1.wulusai.net
-      #peer1.org1.wulusai.net:
-#      - peer0.org2.wulusai.net
-      #peer1.org2.wulusai.net:
-      - ca0.wulusai.net
-#      - ca1.wulusai.net
+#    depends_on:
+#      - zookeeper1.wulusai.net
+#      - zookeeper2.wulusai.net
+#      - zookeeper3.wulusai.net
+#      - kafka1.wulusai.net
+#      - kafka2.wulusai.net
+#      - kafka3.wulusai.net
+#      - kafka4.wulusai.net
+#      - orderer1.wulusai.net
+#      - orderer2.wulusai.net
+#      - orderer3.wulusai.net
+#      - orderer0.wulusai.net
+#      - peer0.org1.wulusai.net
+#      #peer1.org1.wulusai.net:
+##      - peer0.org2.wulusai.net
+#      #peer1.org2.wulusai.net:
+#      - ca0.wulusai.net
+##      - ca1.wulusai.net
 
   p0o2cli:
     container_name: p0o2cli
@@ -204,24 +204,24 @@ services: #服务
       service: p0o2cli
     networks:
       - wulusai
-    depends_on:
-     - zookeeper1.wulusai.net
-     - zookeeper2.wulusai.net
-     - zookeeper3.wulusai.net
-     - kafka1.wulusai.net
-     - kafka2.wulusai.net
-     - kafka3.wulusai.net
-     - kafka4.wulusai.net
-     - orderer1.wulusai.net
-     - orderer2.wulusai.net
-     - orderer3.wulusai.net
-     - orderer0.wulusai.net
-#     - peer0.org1.wulusai.net
-     - peer1.org1.wulusai.net
-#     - peer0.org2.wulusai.net
-      #peer1.org2.wulusai.net:
-#     - ca0.wulusai.net
-     - ca1.wulusai.net
+#    depends_on:
+#     - zookeeper1.wulusai.net
+#     - zookeeper2.wulusai.net
+#     - zookeeper3.wulusai.net
+#     - kafka1.wulusai.net
+#     - kafka2.wulusai.net
+#     - kafka3.wulusai.net
+#     - kafka4.wulusai.net
+#     - orderer1.wulusai.net
+#     - orderer2.wulusai.net
+#     - orderer3.wulusai.net
+#     - orderer0.wulusai.net
+##     - peer0.org1.wulusai.net
+#     - peer1.org1.wulusai.net
+##     - peer0.org2.wulusai.net
+#      #peer1.org2.wulusai.net:
+##     - ca0.wulusai.net
+#     - ca1.wulusai.net
 
 
 
