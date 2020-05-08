@@ -17,7 +17,7 @@ if [ $1 == "clean" ];then
 if [ $1 == "config" ];then
   cryptogen generate --config=crypto-config.yaml
   mkdir channel-artifacts
-  configtxgen -profile TwoOrgsOrdererGenesis -outputBlock ./channel-artifacts/genesis.block -channelID byfn-sys-channel
+  configtxgen -profile SampleDevModeKafka -outputBlock ./channel-artifacts/genesis.block -channelID byfn-sys-channel
   configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID wulusaichannel
   configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID wulusaichannel -asOrg Org1MSP
   configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID wulusaichannel -asOrg Org2MSP
