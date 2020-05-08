@@ -40,7 +40,7 @@ services: #服务
 
   ca1.wulusai.net: #fabric-ca 的服务器名,随意
     extends: #继承
-      file:   docker-compose-peer1org1.yaml #继承的文件位置
+      file:   docker-compose-peer0org2.yaml #继承的文件位置
       service: ca.wulusai.net #继承文件中的服务
     container_name: ca1.wulusai.net
     networks:
@@ -147,21 +147,21 @@ services: #服务
     networks:
       - wulusai
 
-  peer1.org1.wulusai.net:
-    container_name: peer1.org1.wulusai.net
-    extends:
-      file:  base/docker-compose-base.yaml
-      service: peer1.org1.wulusai.net
-    networks:
-      - wulusai
-
-#  peer0.org2.wulusai.net:
-#    container_name: peer0.org2.wulusai.net
+#  peer1.org1.wulusai.net:
+#    container_name: peer1.org1.wulusai.net
 #    extends:
-#      file:  docker-compose-peer1org1.yaml
-#      service: peer0.org2.wulusai.net
+#      file:  base/docker-compose-base.yaml
+#      service: peer1.org1.wulusai.net
 #    networks:
 #      - wulusai
+
+  peer0.org2.wulusai.net:
+    container_name: peer0.org2.wulusai.net
+    extends:
+      file:  docker-compose-peer0org2.yaml
+      service: peer0.org2.wulusai.net
+    networks:
+      - wulusai
 
 #  peer1.org2.wulusai.net:
 #    container_name: peer1.org2.wulusai.net
@@ -178,24 +178,24 @@ services: #服务
       service: p0o1cli
     networks:
       - wulusai
-#    depends_on:
-#      - zookeeper1.wulusai.net
-#      - zookeeper2.wulusai.net
-#      - zookeeper3.wulusai.net
-#      - kafka1.wulusai.net
-#      - kafka2.wulusai.net
-#      - kafka3.wulusai.net
-#      - kafka4.wulusai.net
-#      - orderer1.wulusai.net
-#      - orderer2.wulusai.net
-#      - orderer3.wulusai.net
-#      - orderer0.wulusai.net
-#      - peer0.org1.wulusai.net
-#      #peer1.org1.wulusai.net:
-##      - peer0.org2.wulusai.net
-#      #peer1.org2.wulusai.net:
-#      - ca0.wulusai.net
-##      - ca1.wulusai.net
+    depends_on:
+      - zookeeper1.wulusai.net
+      - zookeeper2.wulusai.net
+      - zookeeper3.wulusai.net
+      - kafka1.wulusai.net
+      - kafka2.wulusai.net
+      - kafka3.wulusai.net
+      - kafka4.wulusai.net
+      - orderer1.wulusai.net
+      - orderer2.wulusai.net
+      - orderer3.wulusai.net
+      - orderer0.wulusai.net
+      - peer0.org1.wulusai.net
+      #peer1.org1.wulusai.net:
+#      - peer0.org2.wulusai.net
+      #peer1.org2.wulusai.net:
+      - ca0.wulusai.net
+#      - ca1.wulusai.net
 
   p0o2cli:
     container_name: p0o2cli
@@ -204,24 +204,24 @@ services: #服务
       service: p0o2cli
     networks:
       - wulusai
-#    depends_on:
-#     - zookeeper1.wulusai.net
-#     - zookeeper2.wulusai.net
-#     - zookeeper3.wulusai.net
-#     - kafka1.wulusai.net
-#     - kafka2.wulusai.net
-#     - kafka3.wulusai.net
-#     - kafka4.wulusai.net
-#     - orderer1.wulusai.net
-#     - orderer2.wulusai.net
-#     - orderer3.wulusai.net
-#     - orderer0.wulusai.net
-##     - peer0.org1.wulusai.net
-#     - peer1.org1.wulusai.net
-##     - peer0.org2.wulusai.net
-#      #peer1.org2.wulusai.net:
-##     - ca0.wulusai.net
-#     - ca1.wulusai.net
+    depends_on:
+     - zookeeper1.wulusai.net
+     - zookeeper2.wulusai.net
+     - zookeeper3.wulusai.net
+     - kafka1.wulusai.net
+     - kafka2.wulusai.net
+     - kafka3.wulusai.net
+     - kafka4.wulusai.net
+     - orderer1.wulusai.net
+     - orderer2.wulusai.net
+     - orderer3.wulusai.net
+     - orderer0.wulusai.net
+#     - peer0.org1.wulusai.net
+     - peer1.org1.wulusai.net
+#     - peer0.org2.wulusai.net
+      #peer1.org2.wulusai.net:
+#     - ca0.wulusai.net
+     - ca1.wulusai.net
 
 
 

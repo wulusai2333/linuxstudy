@@ -7,6 +7,27 @@ version: '2'
 
 services:
 
+  ca.wulusai.net: #fabric-ca 的服务器名,随意
+    image: hyperledger/fabric-ca:latest #镜像文件
+    environment:
+      #容器中的home目录
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      #fabric-ca的服务器名 自己取
+      - FABRIC_CA_SERVER_CA_NAME=ca.wulusai.net
+      #fabric-ca服务器证书文件目录中的证书文件 明确当前ca属于哪个组织
+      - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.wulusai.net-cert.pem
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/priv_sk
+    ports:
+      - "9054:9054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw'
+    volumes:
+      - ./crypto-config/peerOrganizations/org2.wulusai.net/ca/:/etc/hyperledger/fabric-ca-server-config
+    container_name: ca1.wulusai.net
+    networks:
+      default:
+        aliases:
+          - wulusai
+
   peer0.org2.wulusai.net:
     container_name: peer0.org2.wulusai.net
     image: hyperledger/fabric-peer:latest
@@ -77,8 +98,8 @@ services:
         - ./crypto-config:/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/
         - ./scripts:/opt/gopath/src/github.com/hyperledger/fabric/peer/scripts/
         - ./channel-artifacts:/opt/gopath/src/github.com/hyperledger/fabric/peer/channel-artifacts
-    depends_on:
-      - peer0.org2.wulusai.net
+#    depends_on:
+#      - peer0.org2.wulusai.net
     networks:
       default:
         aliases:
