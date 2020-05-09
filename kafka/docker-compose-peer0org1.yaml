@@ -16,7 +16,7 @@ services:
       - FABRIC_CA_SERVER_CA_NAME=ca0.wulusai.net
       #fabric-ca服务器证书文件目录中的证书文件 明确当前ca属于哪个组织
       - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org1.wulusai.net-cert.pem
-      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/priv_sk
+      - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/priv_sk #生成的文件中 priv_sk是一串随机字符串名
     ports:
       - "7054:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw'
@@ -108,3 +108,10 @@ services:
       - "orderer.wulusai.net:0.0.0.0"
       - "peer0.org1.wulusai.net:0.0.0.0"
       #- "peer0.org2.wulusai.net:192.168.100.30"
+
+#  ca0.wulusai.net           | 2020/05/09 07:57:13 [INFO] Created default configuration file at /etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml
+#ca0.wulusai.net           | 2020/05/09 07:57:13 [INFO] Starting server in home directory: /etc/hyperledger/fabric-ca-server
+#ca0.wulusai.net           | 2020/05/09 07:57:13 [INFO] Server Version: 1.4.4
+#ca0.wulusai.net           | 2020/05/09 07:57:13 [INFO] Server Levels: &{Identity:2 Affiliation:1 Certificate:1 Credential:1 RAInfo:1 Nonce:1}
+#ca0.wulusai.net           | Error: Failed to find private key for certificate in '/etc/hyperledger/fabric-ca-server-config/ca.org1.wulusai.net-cert.pem': Could not find matching private key for SKI: Failed getting key for SKI [[253 169 6 215 253 146 14 52 169 236 11 74 128 233 130 248 45 61 41 36 74 194 178 198 16 39 79 64 28 203 211 84]]: Key with SKI fda906d7fd920e34a9ec0b4a80e982f82d3d29244ac2b2c610274f401ccbd354 not found in /etc/hyperledger/fabric-ca-server/msp/keystore
+

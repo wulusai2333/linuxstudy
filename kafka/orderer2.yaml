@@ -32,8 +32,8 @@ services:
     command: orderer
     volumes:
       - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
-      - ./crypto-config/ordererOrganizations/test.com/orderers/orderer2.wulusai.net/msp:/var/hyperledger/orderer/msp
-      - ./crypto-config/ordererOrganizations/test.com/orderers/orderer2.wulusai.net/tls/:/var/hyperledger/orderer/tls
+      - ./crypto-config/ordererOrganizations/wulusai.net/orderers/orderer2.wulusai.net/msp:/var/hyperledger/orderer/msp
+      - ./crypto-config/ordererOrganizations/wulusai.net/orderers/orderer2.wulusai.net/tls/:/var/hyperledger/orderer/tls
     networks:
       default:
         aliases:

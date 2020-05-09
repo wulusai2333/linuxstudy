@@ -31,8 +31,8 @@ services:
     command: orderer
     volumes:
       - ./channel-artifacts/genesis.block:/var/hyperledger/orderer/orderer.genesis.block
-      - ./crypto-config/ordererOrganizations/test.com/orderers/orderer0.wulusai.net/msp:/var/hyperledger/orderer/msp
-      - ./crypto-config/ordererOrganizations/test.com/orderers/orderer0.wulusai.net/tls/:/var/hyperledger/orderer/tls
+      - ./crypto-config/ordererOrganizations/wulusai.net/orderers/orderer0.wulusai.net/msp:/var/hyperledger/orderer/msp
+      - ./crypto-config/ordererOrganizations/wulusai.net/orderers/orderer0.wulusai.net/tls/:/var/hyperledger/orderer/tls
     networks:
       default:
         aliases:
@@ -48,3 +48,10 @@ services:
       - kafka2.wulusai.net:0.0.0.0
       - kafka3.wulusai.net:0.0.0.0
       - kafka4.wulusai.net:0.0.0.0
+
+#
+##  orderer0.wulusai.net      | 2020-05-09 07:57:05.250 UTC [localconfig] completeInitialization
+#  -> INFO 001 Kafka.Version unset, setting to 0.10.2.0
+##orderer0.wulusai.net      | 2020-05-09 07:57:05.251 UTC [orderer.common.server] initializeLocalMsp
+#-> FATA 002 Failed to initialize local MSP: could not load a valid signer certificate from directory
+#/var/hyperledger/orderer/msp/signcerts: stat /var/hyperledger/orderer/msp/signcerts: no such file or directory
