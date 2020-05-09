@@ -375,12 +375,12 @@ Profiles:
         Orderer:
             <<: *OrdererDefaults
             OrdererType: kafka
-                Kafka:
-                    Brokers:
-                    - kafka1.wulusai.net:9092
-                    - kafka2.wulusai.net:9093
-                    - kafka3.wulusai.net:9094
-                    - kafka4.wulusai.net:9095
+            Kafka:
+                Brokers:
+                - kafka1.wulusai.net:9092
+                - kafka2.wulusai.net:9093
+                - kafka3.wulusai.net:9094
+                - kafka4.wulusai.net:9095
             Organizations:
             - *OrdererOrg
             Capabilities:
