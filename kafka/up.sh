@@ -25,8 +25,8 @@ function config() {
   configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID wulusaichannel
   configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID wulusaichannel -asOrg Org1MSP
   configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID wulusaichannel -asOrg Org2MSP
-  mv crypto-config/peerOrganizations/org1.wulusai.net/ca/*_sk  crypto-config/peerOrganizations/org1.wulusai.net/ca/priv_sk
-  mv crypto-config/peerOrganizations/org1.wulusai.net/ca/*_sk  crypto-config/peerOrganizations/org2.wulusai.net/ca/priv_sk
+  #mv crypto-config/peerOrganizations/org1.wulusai.net/ca/*_sk  crypto-config/peerOrganizations/org1.wulusai.net/ca/priv_sk
+  #mv crypto-config/peerOrganizations/org1.wulusai.net/ca/*_sk  crypto-config/peerOrganizations/org2.wulusai.net/ca/priv_sk
   echo "create config $?"
 }
 
