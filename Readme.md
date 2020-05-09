@@ -897,12 +897,21 @@ services:
 ##### 启用kafka集群
 
 ```shell
+#查看当前分支
+git branch -a
+#切换到kafka集群的分支
+git checkout -b alone-1.4.4 origin/alone-1.4.4
+
 cd kafka
+#使脚本可执行
+chmod +x up.sh
+#生成配置文件
+./up.sh config
+#启动容器
+./up.sh up
+#查看文件状态
+docker-compose ps
 #按顺序启动容器 此处假设已经完成了目录的创建,并且通过cryptogen生成的文件和configtxgen生成的区块等文件已经放到了对应的主机上
-docker-compose up -d -f zookeeper.yaml
-docker-compose up -d -f kafka.yaml
-docker-compose up -d -f orderer.yaml
-docker-compose up -d -f peer.yaml
 ```
 
 #### 实例演示
