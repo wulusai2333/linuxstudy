@@ -221,6 +221,9 @@ Orderer: &OrdererDefaults
 
     Addresses:
         - orderer0.wulusai.net:7050
+        - orderer1.wulusai.net:7050
+        - orderer2.wulusai.net:7050
+        - orderer3.wulusai.net:7050
 
     # Batch Timeout: The amount of time to wait before creating a batch
     BatchTimeout: 2s
@@ -248,28 +251,6 @@ Orderer: &OrdererDefaults
             - 127.0.0.1:9093
             - 127.0.0.1:9094
             - 127.0.0.1:9095
-        Consenters:
-            - Host: orderer0.wulusai.net
-              Port: 7050
-              ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer0.wulusai.net/tls/server.crt
-              ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer0.wulusai.net/tls/server.crt
-            - Host: orderer2.wulusai.net
-              Port: 7050
-              ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer2.wulusai.net/tls/server.crt
-              ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer2.wulusai.net/tls/server.crt
-            - Host: orderer3.wulusai.net
-              Port: 7050
-              ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer3.wulusai.net/tls/server.crt
-              ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer3.wulusai.net/tls/server.crt
-            - Host: orderer4.wulusai.net
-              Port: 7050
-              ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer4.wulusai.net/tls/server.crt
-              ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer4.wulusai.net/tls/server.crt
-            - Host: orderer1.wulusai.net
-              Port: 7050
-              ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer1.wulusai.net/tls/server.crt
-              ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer1.wulusai.net/tls/server.crt
-
 
 
     # EtcdRaft defines configuration which must be set when the "etcdraft"
@@ -402,12 +383,6 @@ Profiles:
                 - kafka2.wulusai.net:9093
                 - kafka3.wulusai.net:9094
                 - kafka4.wulusai.net:9095
-            Addresses:
-              - orderer0.wulusai.net:7050
-              - orderer1.wulusai.net:7050
-              - orderer2.wulusai.net:7050
-              - orderer3.wulusai.net:7050
-              - orderer4.wulusai.net:7050
             Organizations:
             - *OrdererOrg
             Capabilities:
