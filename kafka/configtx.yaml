@@ -245,9 +245,6 @@ Orderer: &OrdererDefaults
         # NOTE: Use IP:port notation
         Brokers:
             - 127.0.0.1:9092
-            - 127.0.0.1:9093
-            - 127.0.0.1:9094
-            - 127.0.0.1:9095
 
 
     # EtcdRaft defines configuration which must be set when the "etcdraft"
@@ -258,10 +255,10 @@ Orderer: &OrdererDefaults
         # a subset of the host:port items enumerated in this list should be
         # replicated under the Orderer.Addresses key above.
         Consenters:
-            - Host: orderer0.wulusai.net
+            - Host: orderer.wulusai.net
               Port: 7050
-              ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer0.wulusai.net/tls/server.crt
-              ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer0.wulusai.net/tls/server.crt
+              ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer.wulusai.net/tls/server.crt
+              ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer.wulusai.net/tls/server.crt
             - Host: orderer2.wulusai.net
               Port: 7050
               ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer2.wulusai.net/tls/server.crt
@@ -274,10 +271,10 @@ Orderer: &OrdererDefaults
               Port: 7050
               ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer4.wulusai.net/tls/server.crt
               ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer4.wulusai.net/tls/server.crt
-            - Host: orderer1.wulusai.net
+            - Host: orderer5.wulusai.net
               Port: 7050
-              ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer1.wulusai.net/tls/server.crt
-              ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer1.wulusai.net/tls/server.crt
+              ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer5.wulusai.net/tls/server.crt
+              ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer5.wulusai.net/tls/server.crt
 
     # Organizations is the list of orgs which are defined as participants on
     # the orderer side of the network
@@ -403,10 +400,10 @@ Profiles:
             OrdererType: etcdraft
             EtcdRaft:
                 Consenters:
-                - Host: orderer0.wulusai.net
+                - Host: orderer.wulusai.net
                   Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer0.wulusai.net/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer0.wulusai.net/tls/server.crt
+                  ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer.wulusai.net/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer.wulusai.net/tls/server.crt
                 - Host: orderer2.wulusai.net
                   Port: 7050
                   ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer2.wulusai.net/tls/server.crt
@@ -421,14 +418,14 @@ Profiles:
                   ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer4.wulusai.net/tls/server.crt
                 - Host: orderer1.wulusai.net
                   Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer1.wulusai.net/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer1.wulusai.net/tls/server.crt
+                  ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer5.wulusai.net/tls/server.crt
+                  ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer5.wulusai.net/tls/server.crt
             Addresses:
-                - orderer0.wulusai.net:7050
-                - orderer1.wulusai.net:7050
+                - orderer.wulusai.net:7050
                 - orderer2.wulusai.net:7050
                 - orderer3.wulusai.net:7050
                 - orderer4.wulusai.net:7050
+                - orderer5.wulusai.net:7050
 
             Organizations:
             - *OrdererOrg
