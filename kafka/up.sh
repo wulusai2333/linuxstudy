@@ -6,15 +6,19 @@ if [ $1 == "help" ];then
   echo " config 生成文件"
   echo " up     打开容器"
   echo " down   关闭容器"
-  fi
-#清理配置文件
-if [ $1 == "clean" ];then
+  echo " restart   清理环境重启容器"
+fi
+function clean() {
   rm -rf crypto-config
   rm -rf channel-artifacts
   echo "clean config  $?"
-  fi
-  #生成文件
-if [ $1 == "config" ];then
+}
+#清理配置文件
+if [ $1 == "clean" ];then
+  clean
+fi
+
+function config() {
   cryptogen generate --config=crypto-config.yaml
   mkdir channel-artifacts
   configtxgen -profile SampleDevModeKafka -outputBlock ./channel-artifacts/genesis.block -channelID byfn-sys-channel
@@ -22,11 +26,20 @@ if [ $1 == "config" ];then
   configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID wulusaichannel -asOrg Org1MSP
   configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID wulusaichannel -asOrg Org2MSP
   echo "create config $?"
+}
+
+  #生成文件
+if [ $1 == "config" ];then
+  config
 fi
+
+function up() {
+    docker-compose up -d
+    echo " docker-compose up $?"
+}
 #打开容器
 if [ $1 == "up" ];then
-docker-compose up -d
-echo " docker-compose up $?"
+    up
 fi
 function clearContainers() {
   CONTAINER_IDS=$(docker ps -a | awk '($2 ~ /dev-peer.*/) {print $1}')
@@ -44,26 +57,39 @@ function removeUnwantedImages() {
     docker rmi -f $DOCKER_IMAGE_IDS
   fi
 }
+
+function down() {
+    docker-compose down --volumes --remove-orphans
+    #docker rm -f $(docker ps -a | grep "hyperledger/*" | awk "{print \$1}")
+    docker volume prune
+    export PATH=${PWD}/../bin:${PWD}:$PATH
+    docker run -v $PWD:/tmp/wulusai --rm hyperledger/fabric-tools:$IMAGETAG rm -Rf /tmp/wulusai/ledgers-backup
+    clearContainers
+    removeUnwantedImages
+    echo "remove docker-compose $?"
+}
+
 #关闭容器
 if [ $1 == "down" ];then
-docker-compose down --volumes --remove-orphans
-#docker rm -f $(docker ps -a | grep "hyperledger/*" | awk "{print \$1}")
-docker volume prune
-export PATH=${PWD}/../bin:${PWD}:$PATH
-docker run -v $PWD:/tmp/wulusai --rm hyperledger/fabric-tools:$IMAGETAG rm -Rf /tmp/wulusai/ledgers-backup
-clearContainers
-removeUnwantedImages
-echo "remove docker-compose $?"
+    down
 fi
 
-
+function create() {
+    peer channel create -o orderer.wulusai.net:7050 -c wulusaichannel -f ./channel-artifacts/channel.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/wulusai.net/tlsca/tlsca.wulusai.net-cert.pem
+    echo "create channel block $?"
+}
 
 #创建channel.block
 if [ $1 == "create" ];then
-  peer channel create -o orderer.wulusai.net:7050 -c wulusaichannel -f ./channel-artifacts/channel.tx --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/wulusai.net/tlsca/tlsca.wulusai.net-cert.pem
-  echo "create channel block $?"
+    create
 fi
 #
 #docker stop $(docker ps -a -q)
 #docker rm $(docker ps -a -q)
 #docker rmi -f $(docker images |grep "dev-" |awk '{print $3}')
+if [ $1 == "restart" ];then
+  down
+  clean
+  config
+  up
+fi

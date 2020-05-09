@@ -13,7 +13,7 @@ services:
       #容器中的home目录
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       #fabric-ca的服务器名 自己取
-      - FABRIC_CA_SERVER_CA_NAME=ca.wulusai.net
+      - FABRIC_CA_SERVER_CA_NAME=ca1.wulusai.net
       #fabric-ca服务器证书文件目录中的证书文件 明确当前ca属于哪个组织
       - FABRIC_CA_SERVER_CA_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.org2.wulusai.net-cert.pem
       - FABRIC_CA_SERVER_CA_KEYFILE=/etc/hyperledger/fabric-ca-server-config/priv_sk

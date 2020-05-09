@@ -39,6 +39,7 @@ services: #服务
       - wulusai
     depends_on:
       - peer0.org1.wulusai.net
+      - orderer0.wulusai.net
 
   ca1.wulusai.net: #fabric-ca 的服务器名,随意
     extends: #继承
@@ -49,6 +50,7 @@ services: #服务
       - wulusai
     depends_on:
       - peer0.org2.wulusai.net
+      - orderer0.wulusai.net
 
 #orderer
   orderer0.wulusai.net: #为了方便看 服务名跟域名相同

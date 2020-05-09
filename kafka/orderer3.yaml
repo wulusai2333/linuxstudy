@@ -9,7 +9,8 @@ services:
       - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=wulusai_default
       - ORDERER_GENERAL_LOGLEVEL=debug
       - ORDERER_GENERAL_LISTENADDRESS=0.0.0.0
-      - ORDERER_GENERAL_LISTENPORT=7050
+      #- ORDERER_GENERAL_LISTENPORT=7050
+      - ORDERER_GENERAL_LISTENPORT=37050
       - ORDERER_GENERAL_GENESISMETHOD=file
       - ORDERER_GENERAL_GENESISFILE=/var/hyperledger/orderer/orderer.genesis.block
       - ORDERER_GENERAL_LOCALMSPID=OrdererMSP
@@ -45,7 +46,7 @@ services:
       #      - kafka2:192.168.100.202
       #      - kafka3:192.168.100.203
       #      - kafka4:192.168.100.204
-      - kafka1.wulusai.net:127.0.0.1
-      - kafka2.wulusai.net:127.0.0.1
-      - kafka3.wulusai.net:127.0.0.1
-      - kafka4.wulusai.net:127.0.0.1
+      - kafka1.wulusai.net:0.0.0.0
+      - kafka2.wulusai.net:0.0.0.0
+      - kafka3.wulusai.net:0.0.0.0
+      - kafka4.wulusai.net:0.0.0.0
