@@ -397,40 +397,17 @@ Profiles:
         Orderer:
             <<: *OrdererDefaults
             OrdererType: kafka
-            Kafka:
-                Consenters:
-                - Host: orderer0.wulusai.net
-                  Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer0.wulusai.net/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer0.wulusai.net/tls/server.crt
-                - Host: orderer2.wulusai.net
-                  Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer2.wulusai.net/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer2.wulusai.net/tls/server.crt
-                - Host: orderer3.wulusai.net
-                  Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer3.wulusai.net/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer3.wulusai.net/tls/server.crt
-                - Host: orderer4.wulusai.net
-                  Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer4.wulusai.net/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer4.wulusai.net/tls/server.crt
-                - Host: orderer1.wulusai.net
-                  Port: 7050
-                  ClientTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer1.wulusai.net/tls/server.crt
-                  ServerTLSCert: crypto-config/ordererOrganizations/wulusai.net/orderers/orderer1.wulusai.net/tls/server.crt
                 Brokers:
                 - kafka1.wulusai.net:9092
                 - kafka2.wulusai.net:9093
                 - kafka3.wulusai.net:9094
                 - kafka4.wulusai.net:9095
             Addresses:
-                - orderer0.wulusai.net:7050
-                - orderer1.wulusai.net:7050
-                - orderer2.wulusai.net:7050
-                - orderer3.wulusai.net:7050
-                - orderer4.wulusai.net:7050
-
+              - orderer0.wulusai.net:7050
+              - orderer1.wulusai.net:7050
+              - orderer2.wulusai.net:7050
+              - orderer3.wulusai.net:7050
+              - orderer4.wulusai.net:7050
             Organizations:
             - *OrdererOrg
             Capabilities:
