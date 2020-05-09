@@ -217,7 +217,7 @@ Orderer: &OrdererDefaults
 
     # Orderer Type: The orderer implementation to start
     # Available types are "solo","kafka"  and "etcdraft"
-    OrdererType: solo
+    OrdererType: kafka
 
     Addresses:
         - orderer0.wulusai.net:7050
