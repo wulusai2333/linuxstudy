@@ -245,6 +245,9 @@ Orderer: &OrdererDefaults
         # NOTE: Use IP:port notation
         Brokers:
             - 127.0.0.1:9092
+            - 127.0.0.1:9093
+            - 127.0.0.1:9094
+            - 127.0.0.1:9095
 
 
     # EtcdRaft defines configuration which must be set when the "etcdraft"
@@ -372,11 +375,12 @@ Profiles:
         Orderer:
             <<: *OrdererDefaults
             OrdererType: kafka
-                Brokers:
-                - kafka1.wulusai.net:9092
-                - kafka2.wulusai.net:9093
-                - kafka3.wulusai.net:9094
-                - kafka4.wulusai.net:9095
+                Kafka:
+                    Brokers:
+                    - kafka1.wulusai.net:9092
+                    - kafka2.wulusai.net:9093
+                    - kafka3.wulusai.net:9094
+                    - kafka4.wulusai.net:9095
             Organizations:
             - *OrdererOrg
             Capabilities:
