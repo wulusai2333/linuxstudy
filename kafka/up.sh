@@ -25,8 +25,8 @@ function config() {
   configtxgen -profile TwoOrgsChannel -outputCreateChannelTx ./channel-artifacts/channel.tx -channelID wulusaichannel
   configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org1MSPanchors.tx -channelID wulusaichannel -asOrg Org1MSP
   configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID wulusaichannel -asOrg Org2MSP
-  export BYFN_CA1_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/org1.example.com/ca && ls *_sk)
-  export BYFN_CA2_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/org2.example.com/ca && ls *_sk)
+  export BYFN_CA1_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/org1.wulusai.net/ca && ls *_sk)
+  export BYFN_CA2_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/org2.wulusai.net/ca && ls *_sk)
   echo "create config $?"
 }
 
@@ -41,8 +41,6 @@ function up() {
 }
 #打开容器
 if [ $1 == "up" ];then
-  export BYFN_CA1_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/org1.example.com/ca && ls *_sk)
-  export BYFN_CA2_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/org2.example.com/ca && ls *_sk)
     up
 fi
 function clearContainers() {
