@@ -31,10 +31,10 @@ services:
 #      - kafka2:192.168.100.202
 #      - kafka3:192.168.100.203
 #      - kafka4:192.168.100.204
-      - zookeeper1.wulusai.net:0.0.0.0
-      - zookeeper2.wulusai.net:0.0.0.0
-      - zookeeper3.wulusai.net:0.0.0.0
-      - kafka1.wulusai.net:0.0.0.0
-      - kafka2.wulusai.net:0.0.0.0
-      - kafka3.wulusai.net:0.0.0.0
-      - kafka4.wulusai.net:0.0.0.0
+      - zookeeper1.wulusai.net:127.0.0.1
+      - zookeeper2.wulusai.net:127.0.0.1
+      - zookeeper3.wulusai.net:127.0.0.1
+      - kafka1.wulusai.net:127.0.0.1
+      - kafka2.wulusai.net:127.0.0.1
+      - kafka3.wulusai.net:127.0.0.1
+      - kafka4.wulusai.net:127.0.0.1

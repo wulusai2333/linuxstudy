@@ -41,6 +41,8 @@ function up() {
 }
 #打开容器
 if [ $1 == "up" ];then
+  export BYFN_CA1_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/org1.example.com/ca && ls *_sk)
+  export BYFN_CA2_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/org2.example.com/ca && ls *_sk)
     up
 fi
 function clearContainers() {

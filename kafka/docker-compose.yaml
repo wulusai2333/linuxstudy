@@ -235,7 +235,6 @@ services: #服务
       - orderer3.wulusai.net
       - orderer0.wulusai.net
       - peer0.org1.wulusai.net
-      - ca0.wulusai.net
 
 
   p0o2cli:
@@ -251,7 +250,6 @@ services: #服务
      - orderer3.wulusai.net
      - orderer0.wulusai.net
      - peer0.org2.wulusai.net
-     - ca1.wulusai.net
 
 
 
