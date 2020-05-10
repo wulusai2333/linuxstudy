@@ -26,7 +26,7 @@ services:
       - ORDERER_KAFKA_RETRY_SHORTTOTAL=30s #重试时长 第一阶段
       - ORDERER_KAFKA_VERBOSE=true #orderer与kafka通信是否启用日志
       #- ORDERER_KAFKA_BROKERS=[192.168.100.201:9092,192.168.100.202:9092,192.168.100.203:9092,192.168.100.204:9092]
-      - ORDERER_KAFKA_BROKERS=[127.0.0.1:9092,127.0.0.1:9093,127.0.0.1:9094,127.0.0.1:9095]
+      - ORDERER_KAFKA_BROKERS=[0.0.0.0:9092,0.0.0.0:10092,0.0.0.0:11092,0.0.0.0:12092]
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric
     command: orderer
     volumes:
@@ -49,9 +49,3 @@ services:
       - kafka3.wulusai.net:0.0.0.0
       - kafka4.wulusai.net:0.0.0.0
 
-#
-##  orderer0.wulusai.net      | 2020-05-09 07:57:05.250 UTC [localconfig] completeInitialization
-#  -> INFO 001 Kafka.Version unset, setting to 0.10.2.0
-##orderer0.wulusai.net      | 2020-05-09 07:57:05.251 UTC [orderer.common.server] initializeLocalMsp
-#-> FATA 002 Failed to initialize local MSP: could not load a valid signer certificate from directory
-#/var/hyperledger/orderer/msp/signcerts: stat /var/hyperledger/orderer/msp/signcerts: no such file or directory

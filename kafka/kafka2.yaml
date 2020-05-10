@@ -23,7 +23,7 @@ services:
       - KAFKA_HEAP_OPTS=-Xmx512M -Xms256M #堆内存 默认1G
     ports:
       #- 9092:9092
-      - 9093:9093
+      - 10092:10092
     extra_hosts:
       #      - zookeeper1:192.168.100.101
       #      - zookeeper2:192.168.100.102
