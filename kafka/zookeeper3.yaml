@@ -11,7 +11,7 @@ services:
       # ID在集合中必须是唯一的并且应该有一个值，在1和255之间。
       - ZOO_MY_ID=3
       # server.x=[hostname]:nnnnn[:nnnnn]
-      #- ZOO_SERVERS=server.1=zookeeper1:2888:3888 server.2=zookeeper2:2888:3888 server.3=zookeeper3:2888:3888
+      #- ZOO_SERVERS:server.1=zookeeper1:2888:3888 server.2=zookeeper2:2888:3888 server.3=zookeeper3:2888:3888
       - ZOO_SERVERS=server.1=zookeeper1.wulusai.net:2888:3888 server.2=zookeeper2.wulusai.net:12888:13888 server.3=zookeeper3.wulusai.net:22888:23888
     ports:
       #- 2181:2181
