@@ -6,7 +6,7 @@ services:
   kafka3.wulusai.net:
     container_name: kafka3.wulusai.net
     hostname: kafka3.wulusai.net
-    image: hyperledger/fabric-kafka
+    image: hyperledger/fabric-kafka:latest
     restart: always
     environment:
       # broker.id

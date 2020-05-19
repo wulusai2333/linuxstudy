@@ -1128,3 +1128,54 @@ peer chaincode invoke -o orderer.example.com:7050  --tls $CORE_PEER_TLS_ENABLED 
 peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}'
 ```
 
+
+
+
+
+```
+hyperledger/fabric-ca          1.4                 
+hyperledger/fabric-tools       1.4                 
+hyperledger/fabric-orderer     1.4                 
+hyperledger/fabric-peer        1.4                 
+hyperledger/fabric-javaenv     1.4.4               
+hyperledger/fabric-javaenv     latest              
+hyperledger/fabric-ca          1.4.4               
+hyperledger/fabric-ca          latest              
+hyperledger/fabric-tools       1.4.4               
+hyperledger/fabric-tools       latest              
+hyperledger/fabric-ccenv       1.4.4              
+hyperledger/fabric-ccenv       latest             
+hyperledger/fabric-orderer     1.4.4               
+hyperledger/fabric-orderer     latest              
+hyperledger/fabric-peer        1.4.4               
+hyperledger/fabric-peer        latest              
+hyperledger/fabric-zookeeper   0.4.18              
+hyperledger/fabric-zookeeper   latest              
+hyperledger/fabric-kafka       0.4.18              
+hyperledger/fabric-kafka       latest              
+hyperledger/fabric-couchdb     0.4.18              
+hyperledger/fabric-couchdb     latest              
+hyperledger/fabric-baseos amd64-0.4.18
+docker save -o fabric-ca1.4.tar hyperledger/fabric-ca:1.4
+docker save -o fabric-tools1.4.tar hyperledger/fabric-tools:1.4
+docker save -o fabric-orderer1.4.tar hyperledger/fabric-orderer:1.4
+docker save -o fabric-peer1.4.tar hyperledger/fabric-peer:1.4
+
+docker save -o fabric-javaenv1.4.4.tar hyperledger/fabric-javaenv:1.4.4
+docker save -o fabric-ca1.4.4.tar hyperledger/fabric-ca:1.4.4
+docker save -o fabric-tools1.4.4.tar hyperledger/fabric-tools:1.4.4
+docker save -o fabric-ccenv1.4.4.tar hyperledger/fabric-ccenv:1.4.4
+docker save -o fabric-orderer1.4.4.tar hyperledger/fabric-orderer:1.4.4
+docker save -o fabric-peer1.4.4.tar hyperledger/fabric-peer:1.4.4
+docker save -o fabric-zookeeper0.4.18.tar hyperledger/fabric-zookeeper:1.4.4
+docker save -o fabric-kafka1.4.4.tar hyperledger/fabric-kafka:1.4.4
+docker save -o fabric-couchdb1.4.4.tar hyperledger/fabric-couchdb:1.4.4
+docker save -o fabric-baseosamd64-0.4.18.tar hyperledger/fabric-baseos:amd64-0.4.18
+
+
+```
+
+
+
+
+

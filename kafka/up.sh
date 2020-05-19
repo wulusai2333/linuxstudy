@@ -27,6 +27,8 @@ function config() {
   configtxgen -profile TwoOrgsChannel -outputAnchorPeersUpdate ./channel-artifacts/Org2MSPanchors.tx -channelID wulusaichannel -asOrg Org2MSP
   export BYFN_CA1_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/org1.wulusai.net/ca && ls *_sk)
   export BYFN_CA2_PRIVATE_KEY=$(cd crypto-config/peerOrganizations/org2.wulusai.net/ca && ls *_sk)
+  echo $BYFN_CA1_PRIVATE_KEY
+  echo $BYFN_CA2_PRIVATE_KEY
   echo "create config $?"
 }
 
